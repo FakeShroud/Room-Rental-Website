@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import axios from "axios";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
@@ -35,7 +35,7 @@ function Loginscreen() {
           <div className="bs">
             <h2>Login</h2>
 
-            <input
+            <input 
               type="text"
               className="form-control"
               placeholder="Email"

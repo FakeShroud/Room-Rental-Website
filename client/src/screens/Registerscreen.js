@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
 import Success from "../components/Success";
