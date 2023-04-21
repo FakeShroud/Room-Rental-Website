@@ -1,43 +1,43 @@
 const mongoose = require("mongoose");
 const bookingSchema = mongoose.Schema({
-    room : {
+    // room : {
+    //     type: String,
+    //     required: true,
+    // },
+    // _id: {
+    //     type: String,
+    //     required: true,
+    // },
+    // userid : {
+    //     type: String,
+    //     required: true,
+    // },
+    fromdate : {
         type: String,
-        required: true,
+        required: false,
     },
-    roomid : {
-        type: String,
-        required: true,
-    },
-    userid : {
-        type: String,
-        required: true,
-    },
-    fromDateObj : {
-        type: String,
-        required: true,
-    },
-    toDateObj : {
-        type: String,
-        required: true,
+    todate : {
+        type: Date,
+        required: false,
     },
     totalamount : {
         type: Number,
-        required: true,
+        required: false,
     },
     totdaldays : {
         type: Number,
-        required: true,
+        required: false,
     },
     transactionId : {
         type: String,
-        required: true,
+        required: false,
     },
-    status : {
-        type: String,
-        required: true,
-        default: "booked",
-    }
+    // status : {
+    //     type: String,
+    //     required: true,
+    //     default: "booked",
+    // }
 }, {timestamps: true});
-const bookingmodel = mongoose.model('bookings', bookingSchema);
-module.exports = bookingmodel;
+const Booking = mongoose.model('Booking', bookingSchema);
+module.exports = Booking;
 

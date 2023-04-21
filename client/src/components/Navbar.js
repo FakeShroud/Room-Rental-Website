@@ -22,7 +22,7 @@ function Navbar() {
           aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon">
-            <i class="fa-solid fa-bars" style={{ color: "white" }}></i>
+            <i className="fa-solid fa-bars" style={{ color: "white" }}></i>
           </span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
@@ -34,25 +34,25 @@ function Navbar() {
             </li>
             {user ? (
               <>
-                <div class="dropdown">
+                <div className="dropdown">
                   <button
-                    class="btn btn-secondary dropdown-toggle"
+                    className="btn btn-secondary dropdown-toggle"
                     type="button"
                     id="dropdownMenuButton"
                     data-toggle="dropdown"
                     aria-haspopup="true"
                     aria-expanded="false"
                   >
-                    <i class="fa-solid fa-user mr-2"></i>{user.name}
+                    <i className="fa-solid fa-user mr-2"></i>{user.name}
                   </button>
                   <div
-                    class="dropdown-menu"
+                    className="dropdown-menu"
                     aria-labelledby="dropdownMenuButton"
                   >
-                    <a class="dropdown-item" href="#">
+                    <a className="dropdown-item" href="#">
                       Rented
                     </a>
-                    <a class="dropdown-item" href="/login" onClick={logout}>
+                    <a className="dropdown-item" href="/login" onClick={logout}>
                       Logout
                     </a>
                   </div>
