@@ -44,7 +44,7 @@ function Bookingscreen() {
   async function bookRoom() {
     const bookingDetails = {
       data,
-      userid: JSON.parse(localStorage.getItem("currentUser"))._id,
+      // userid: JSON.parse(localStorage.getItem("currentUser"))._id,
       fromdate,
       todate,
       totalamount: (data.rentpermonth / 30) * totaldays,
@@ -53,6 +53,7 @@ function Bookingscreen() {
     try {
       const result = await axios.post("/api/bookings/bookroom", bookingDetails);
       console.log(result);
+     
     } catch (error) {}
   }
 
