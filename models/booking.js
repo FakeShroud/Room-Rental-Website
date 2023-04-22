@@ -1,23 +1,23 @@
 const mongoose = require("mongoose");
-const bookingSchema = mongoose.Schema({
-    // room : {
-    //     type: String,
-    //     required: true,
-    // },
-    // _id: {
-    //     type: String,
-    //     required: true,
-    // },
-    // userid : {
-    //     type: String,
-    //     required: true,
-    // },
+const bookingSchema = new mongoose.Schema({
+    data : {
+        type: String,
+        required: true,
+    },
+    roomid: {
+        type: String,
+        required: true,
+    },
+    userid : {
+        type: String,
+        required: true,
+    },
     fromdate : {
         type: String,
         required: false,
     },
     todate : {
-        type: Date,
+        type: String,
         required: false,
     },
     totalamount : {
@@ -32,11 +32,11 @@ const bookingSchema = mongoose.Schema({
         type: String,
         required: false,
     },
-    // status : {
-    //     type: String,
-    //     required: true,
-    //     default: "booked",
-    // }
+    status : {
+        type: String,
+        required: true,
+        default: "booked",
+    }
 }, {timestamps: true});
 const Booking = mongoose.model('Booking', bookingSchema);
 module.exports = Booking;

@@ -1,18 +1,16 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import StripeCheckout from "react-stripe-checkout";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
 import moment from "moment";
 
-function Bookingscreen() {
+function Bookingscreen({ match }) {
   const [data, setData] = useState();
   const [loading, setloading] = useState(true);
   const [error, setError] = useState();
-  // const roomid = roomid;
-  // const from_date = fromdate;
-  // const to_date = todate;
 
   let { id } = useParams();
   let { fromdate } = useParams();
@@ -40,21 +38,24 @@ function Bookingscreen() {
   const fromDateObj = moment(fromdate, "DD-MM-YYYY");
   const toDateObj = moment(todate, "DD-MM-YYYY");
   const totaldays = moment.duration(toDateObj.diff(fromDateObj)).asDays();
-  
+
   async function bookRoom() {
     const bookingDetails = {
       data,
-      // userid: JSON.parse(localStorage.getItem("currentUser"))._id,
+      roomid: data._id,
+      userid: JSON.parse(localStorage.getItem("currentUser"))._id,
       fromdate,
+
       todate,
-      totalamount: (data.rentpermonth / 30) * totaldays,
       totaldays,
     };
     try {
       const result = await axios.post("/api/bookings/bookroom", bookingDetails);
       console.log(result);
-     
     } catch (error) {}
+  }
+  function onToken(token) {
+    console.log(token);
   }
 
   return (
@@ -77,7 +78,9 @@ function Bookingscreen() {
                 <h1>Renting Details</h1>
                 <hr />
                 <b>
-                  <p>Name: </p>
+                  <p>
+                    Name: {JSON.parse(localStorage.getItem("currentUser")).name}{" "}
+                  </p>
                   <p>From Date: {fromdate} </p>
                   <p>To Date: {todate}</p>
                   <p>Maximum people: {data.maxcount} </p>
@@ -95,6 +98,10 @@ function Bookingscreen() {
               </div>
               <div style={{ float: "right" }}>
                 <button className="btn btn-primary" onClick={bookRoom}>
+                  <StripeCheckout
+                    token={onToken}
+                    stripeKey="pk_test_51MzfgtDS7HkKPzS4Jy54wVnJuWQK9QC1n8tfv0pSzsD88dWW3BQhoAKmoNLjcZEQgWsXKPvhXGhALiAgLSovZYgw00uQS6g8hG"
+                  />
                   Pay Now
                 </button>
               </div>
