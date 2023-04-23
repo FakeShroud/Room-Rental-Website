@@ -35,9 +35,11 @@ function Bookingscreen({ match }) {
 
     fetchData();
   }, [id]);
+
   const fromDateObj = moment(fromdate, "DD-MM-YYYY");
   const toDateObj = moment(todate, "DD-MM-YYYY");
   const totaldays = moment.duration(toDateObj.diff(fromDateObj)).asDays();
+  
 
   async function bookRoom() {
     const bookingDetails = {
@@ -91,6 +93,7 @@ function Bookingscreen({ match }) {
                   <h1>Amount</h1>
                   <hr />
 
+                  {/* <p>Total Days: {totaldays} </p> */}
                   <p>Total Days: {totaldays} </p>
                   <p>Per Month: {data.rentpermonth} </p>
                   <p>Total Amount: {(data.rentpermonth / 30) * totaldays} </p>
