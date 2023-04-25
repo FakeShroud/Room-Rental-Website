@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
@@ -31,20 +31,20 @@ function Loginscreen() {
 
       <div className="row justify-content-center mt-5">
         <div className="col-md-5 mt-5">
-          {error && <Error message='Invalid Credentials!' />}
+          {error && <Error message="Invalid Credentials!" />}
           <div className="bs">
             <h2>Login</h2>
-
-            <input 
+            <label htmlFor="email-input">Email<span style={{ color: "red" }}>*</span></label>
+            <input
               type="text"
-              className="form-control"
+              className="form-control mb-3"
               placeholder="Email"
               value={email}
               onChange={(e) => {
                 setemail(e.target.value);
               }}
             />
-
+            <label htmlFor="password-input">Password<span style={{ color: "red" }}>*</span></label>
             <input
               type="password"
               className="form-control"
@@ -58,6 +58,10 @@ function Loginscreen() {
             <button className="btn btn-primary mt-3" onClick={login}>
               Login
             </button>
+            <div className="mt-2">
+              <span>Don't have an account? </span>
+              <a href="/register">Register</a>
+            </div>
           </div>
         </div>
       </div>

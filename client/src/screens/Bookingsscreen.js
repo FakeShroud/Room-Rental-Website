@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
 import moment from "moment";
+import Swal from "sweetalert2";
 
 function Bookingscreen({ match }) {
   const [data, setData] = useState();
@@ -18,6 +19,9 @@ function Bookingscreen({ match }) {
 
   useEffect(() => {
     const fetchData = async () => {
+      if(!localStorage.getItem("currentUser")){
+        window.location.href = "/login";
+      }
       try {
         setloading(true);
         const { data: response } = await axios.post("/api/rooms/getroombyid", {
@@ -54,6 +58,7 @@ function Bookingscreen({ match }) {
     try {
       const result = await axios.post("/api/bookings/bookroom", bookingDetails);
       console.log(result);
+      Swal.fire("Congrats!", "Room Rented Successfully", "success")
     } catch (error) {}
   }
   function onToken(token) {
@@ -101,11 +106,11 @@ function Bookingscreen({ match }) {
               </div>
               <div style={{ float: "right" }}>
                 <button className="btn btn-primary" onClick={bookRoom}>
-                  <StripeCheckout
+                  {/* <StripeCheckout
                     token={onToken}
                     stripeKey="pk_test_51MzfgtDS7HkKPzS4Jy54wVnJuWQK9QC1n8tfv0pSzsD88dWW3BQhoAKmoNLjcZEQgWsXKPvhXGhALiAgLSovZYgw00uQS6g8hG"
-                  />
-                  Pay Now
+                  /> */}
+                  Rent Now
                 </button>
               </div>
             </div>

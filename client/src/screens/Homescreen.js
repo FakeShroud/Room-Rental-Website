@@ -5,7 +5,6 @@ import "antd/dist/reset.css";
 import { DatePicker, Space } from "antd";
 import Room from "../components/Room";
 import Loader from "../components/Loader";
-import Error from "../components/Error";
 const { RangePicker } = DatePicker;
 
 const Homescreen = () => {
@@ -37,6 +36,7 @@ const Homescreen = () => {
     fetchData();
   }, []);
   function filterByDate(dates) {
+    if (!dates || !dates[0] || !dates[1]) return;
     setfromdate(dates[0].format("DD-MM-YYYY"));
     settodate(dates[1].format("DD-MM-YYYY"));
 
@@ -48,22 +48,22 @@ const Homescreen = () => {
           if (
             !
               moment((dates[0]).format("DD-MM-YYYY")).isBetween(
-                booking.fromDateObj,
-                booking.toDateObj
+                booking.fromdate,
+                booking.todate
               
             ) &&
             !
               moment((dates[1]).format("DD-MM-YYYY")).isBetween(
-                booking.fromDateObj,
-                booking.toDateObj
+                booking.fromdate,
+                booking.todate
               
             )
           ) {
             if (
-              moment(dates[0]).format("DD-MM-YYYY") !== booking.fromDateObj &&
-              moment(dates[0]).format("DD-MM-YYYY") !== booking.toDateObj &&
-              moment(dates[1]).format("DD-MM-YYYY") !== booking.fromDateObj &&
-              moment(dates[1]).format("DD-MM-YYYY") !== booking.toDateObj
+              moment(dates[0]).format("DD-MM-YYYY") !== booking.fromdate &&
+              moment(dates[0]).format("DD-MM-YYYY") !== booking.todate &&
+              moment(dates[1]).format("DD-MM-YYYY") !== booking.fromdate &&
+              moment(dates[1]).format("DD-MM-YYYY") !== booking.todate
             ) {
               availability = true;
             }

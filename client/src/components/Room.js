@@ -36,7 +36,7 @@ function Room({ data, fromdate, todate }) {
           <Modal.Title>{data.name}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Carousel prevLabel='' nextLabel=''>
+          <Carousel prevLabel='' nextLabel='' interval={1000}>
             {data.imageurls.map((url) => {
               return (
                 <Carousel.Item>
