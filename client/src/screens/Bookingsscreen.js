@@ -54,6 +54,10 @@ function Bookingscreen({ match }) {
       todate,
       totaldays,
     };
+    if (totaldays < 30) {
+      Swal.fire("Oops!", "Minimum rental period is 30 days.", "error");
+      return;
+    }
     try {
       const result = await axios.post("/api/bookings/bookroom", bookingDetails);
       console.log(result);

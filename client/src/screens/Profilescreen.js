@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import Loader from "../components/Loader";
 import Swal from "sweetalert2";
@@ -59,13 +60,19 @@ function Profilescreen() {
                 </div>
               </div>
             </div>
-            <div className="text-right">
+           <Link to='/postroom'>
+           <div className="text-right">
+              
               <button className="btn btn-primary">Post Room</button>
             </div>
+           </Link>
           </div>
         </TabPane>
         <TabPane tab="Bookings" key="2">
           <MyBookings />
+        </TabPane>
+        <TabPane tab="Post Room" key="3">
+          <PostRoom />
         </TabPane>
       </Tabs>
     </div>
@@ -162,6 +169,42 @@ export function MyBookings() {
               </div>
             );
           })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function PostRoom() {
+  // const [name, setname] = useState("");
+  // const [rentpermonth, setrentpermonth] = useState("");
+  // const [maxcount, setmaxcount] = useState("");
+  // const [description, setdescription] = useState("");
+  // const [phonenumber, setphonenumber] = useState("");
+  // const [type, settype] = useState("");
+  // const [imageurl1, setimage1] = useState("");
+  // const [imageurl2, setimage2] = useState("");
+  // const [imageurl3, setimage3] = useState("");
+
+
+
+  return (
+    <div className="row bs">
+      <div className="col-md-5">
+        <input type="text" className="form-control mb-3" placeholder="Room Name" 
+        />
+        <input type="text" className="form-control mb-3" placeholder="RentPerMonth" />
+        <input type="text" className="form-control mb-3" placeholder="Maximum People" />
+        <input type="text" className="form-control mb-3" placeholder="Description" />
+        <input type="text" className="form-control mb-3" placeholder="Phone Number" />
+      </div>
+      <div className="col-md-5">
+        <input type="text" className="form-control mb-3" placeholder="Floor" />
+        <input type="text" className="form-control mb-3" placeholder="Image URL 1" />
+        <input type="text" className="form-control mb-3" placeholder="Image URL 2" />
+        <input type="text" className="form-control mb-3" placeholder="Image URL 3" />
+        <div className="text-right">
+          <button className="btn btn-primary mt-1">Post Room</button>
         </div>
       </div>
     </div>
