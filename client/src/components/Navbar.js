@@ -27,11 +27,13 @@ function Navbar() {
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav mr-5">
-            <li className="nav-item active">
-              {/* <a className="nav-link" href="/aboutus">
-                About Us
-              </a> */}
-            </li>
+            {!user && (
+              <li className="nav-item active">
+                <a className="nav-link" href="/aboutus">
+                  About Us
+                </a>
+              </li>
+            )}
             {user ? (
               <>
                 <div className="dropdown">

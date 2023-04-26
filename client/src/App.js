@@ -8,6 +8,7 @@ import Registerscreen from "./screens/Registerscreen";
 import Aboutus from "./screens/Aboutus";
 import Profilescreen from "./screens/Profilescreen";
 import Adminscreen from "./screens/Adminscreen";
+import Landingscreen from "./screens/Landingscreen";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/aboutus" exact element={<Aboutus />}></Route>
           <Route path="/profile" exact element={<Profilescreen />}></Route>
           <Route path="/admin" exact element={<Adminscreen />}></Route>
+          <Route path="/" exact element={<Landingscreen />}></Route>
           </Routes>
         
       </BrowserRouter>

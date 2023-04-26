@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Loader from "../components/Loader";
-
 import Swal from "sweetalert2";
 import { Tag } from "antd";
-
 import { Tabs } from "antd";
 const { TabPane } = Tabs;
 
@@ -18,14 +16,53 @@ function Profilescreen() {
   }, [user]);
 
   return (
-    <div className="ml-3 mt-3">
+    <div className="container mt-3">
       <Tabs defaultActiveKey="1">
         <TabPane tab="Profile" key="1">
-          <h1>My Profile</h1>
-          <br />
-          <h1>Name: {user.name} </h1>
-          <h1>Email: {user.email}</h1>
-          <h1>isAdmin: {user.isAdmin ? "Yes" : "No"}</h1>
+          <div className="col-lg-8">
+            <div className="card mb-4">
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-sm-3">
+                    <p className="mb-0">Name</p>
+                  </div>
+                  <div className="col-sm-9">
+                    <p className="text-muted mb-0">{user.name}</p>
+                  </div>
+                </div>
+                <hr />
+                <div className="row">
+                  <div className="col-sm-3">
+                    <p className="mb-0">Email</p>
+                  </div>
+                  <div className="col-sm-9">
+                    <p className="text-muted mb-0">{user.email}</p>
+                  </div>
+                </div>
+                <hr />
+                <div className="row">
+                  <div className="col-sm-3">
+                    <p className="mb-0">District</p>
+                  </div>
+                  <div className="col-sm-9">
+                    <p className="text-muted mb-0">{user.district}</p>
+                  </div>
+                </div>
+                <hr />
+                <div className="row">
+                  <div className="col-sm-3">
+                    <p className="mb-0">Phone</p>
+                  </div>
+                  <div className="col-sm-9">
+                    <p className="text-muted mb-0">{user.number}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="text-right">
+              <button className="btn btn-primary">Post Room</button>
+            </div>
+          </div>
         </TabPane>
         <TabPane tab="Bookings" key="2">
           <MyBookings />
@@ -91,7 +128,7 @@ export function MyBookings() {
           {loading && <Loader />}
           {bookings?.map((booking) => {
             return (
-              <div className="bs">
+              <div key={booking._id} className="bs">
                 <h1>{booking.data}</h1>
                 <p>
                   <b>BookingId:</b> {booking._id}

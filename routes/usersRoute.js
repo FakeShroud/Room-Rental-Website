@@ -1,5 +1,4 @@
 const express = require("express");
-const crypto = require("crypto");
 const router = express.Router();
 const User = require("../models/user");
 
@@ -37,6 +36,8 @@ router.post("/login", async (req, res) => {
         email: user.email,
         isAdmin: user.isAdmin,
         _id: user._id,
+        district: user.district,
+        number: user.number,
       };
       res.send(temp);
     } else {

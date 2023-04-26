@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import StripeCheckout from "react-stripe-checkout";
+// import StripeCheckout from "react-stripe-checkout";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Loader from "../components/Loader";
@@ -19,7 +19,7 @@ function Bookingscreen({ match }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      if(!localStorage.getItem("currentUser")){
+      if (!localStorage.getItem("currentUser")) {
         window.location.href = "/login";
       }
       try {
@@ -43,7 +43,6 @@ function Bookingscreen({ match }) {
   const fromDateObj = moment(fromdate, "DD-MM-YYYY");
   const toDateObj = moment(todate, "DD-MM-YYYY");
   const totaldays = moment.duration(toDateObj.diff(fromDateObj)).asDays();
-  
 
   async function bookRoom() {
     const bookingDetails = {
@@ -58,11 +57,8 @@ function Bookingscreen({ match }) {
     try {
       const result = await axios.post("/api/bookings/bookroom", bookingDetails);
       console.log(result);
-      Swal.fire("Congrats!", "Room Rented Successfully", "success")
+      Swal.fire("Congrats!", "Room Rented Successfully", "success");
     } catch (error) {}
-  }
-  function onToken(token) {
-    console.log(token);
   }
 
   return (
@@ -97,19 +93,13 @@ function Bookingscreen({ match }) {
                 <b>
                   <h1>Amount</h1>
                   <hr />
-
-                  {/* <p>Total Days: {totaldays} </p> */}
                   <p>Total Days: {totaldays} </p>
                   <p>Per Month: {data.rentpermonth} </p>
-                  <p>Total Amount: {(data.rentpermonth / 30) * totaldays} </p>
+                  <p>Total Amount: {Math.round((data.rentpermonth / 30) * totaldays)} </p>
                 </b>
               </div>
               <div style={{ float: "right" }}>
                 <button className="btn btn-primary" onClick={bookRoom}>
-                  {/* <StripeCheckout
-                    token={onToken}
-                    stripeKey="pk_test_51MzfgtDS7HkKPzS4Jy54wVnJuWQK9QC1n8tfv0pSzsD88dWW3BQhoAKmoNLjcZEQgWsXKPvhXGhALiAgLSovZYgw00uQS6g8hG"
-                  /> */}
                   Rent Now
                 </button>
               </div>

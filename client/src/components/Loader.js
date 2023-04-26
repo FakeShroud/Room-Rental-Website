@@ -3,12 +3,7 @@ import HashLoader from "react-spinners/HashLoader";
 
 function Loader() {
   let [loading, setLoading] = useState(true);
-//   let [color, setColor] = useState("#ffffff");
-//   const override = {
-//     display: "block",
-//     margin: "0 auto",
-//     borderColor: "red",
-//   };
+
 
   return (
     <div style={{marginTop:'150px'}}>
