@@ -60,12 +60,6 @@ function Profilescreen() {
                 </div>
               </div>
             </div>
-           <Link to='/postroom'>
-           <div className="text-right">
-              
-              <button className="btn btn-primary">Post Room</button>
-            </div>
-           </Link>
           </div>
         </TabPane>
         <TabPane tab="Bookings" key="2">
@@ -176,35 +170,136 @@ export function MyBookings() {
 }
 
 export function PostRoom() {
-  // const [name, setname] = useState("");
-  // const [rentpermonth, setrentpermonth] = useState("");
-  // const [maxcount, setmaxcount] = useState("");
-  // const [description, setdescription] = useState("");
-  // const [phonenumber, setphonenumber] = useState("");
-  // const [type, settype] = useState("");
-  // const [imageurl1, setimage1] = useState("");
-  // const [imageurl2, setimage2] = useState("");
-  // const [imageurl3, setimage3] = useState("");
+  const [loading, setloading] = useState(false);
+  const [error, setError] = useState();
+  const [name, setname] = useState("");
+  const [rentpermonth, setrentpermonth] = useState("");
+  const [maxcount, setmaxcount] = useState("");
+  const [description, setdescription] = useState("");
+  const [phonenumber, setphonenumber] = useState("");
+  const [type, settype] = useState("");
+  const [imageurl1, setimageurl1] = useState("");
+  const [imageurl2, setimageurl2] = useState("");
+  const [imageurl3, setimageurl3] = useState("");
 
-
+  async function addRoom() {
+    const newroom = {
+      name,
+      rentpermonth,
+      maxcount,
+      description,
+      phonenumber,
+      type,
+      imageurls: [imageurl1, imageurl2, imageurl3],
+    };
+    try {
+      setloading(true);
+      const result = await axios.post("/api/rooms/addroom", newroom).data;
+      console.log(result);
+      setloading(false);
+      Swal.fire("Congrats!", "Room Added Successfully", "success").then(
+        (result) => {
+          window.location.href = "/home";
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      setloading(false);
+      Swal.fire("Oops!", "Something went wrong", "error");
+    }
+  }
 
   return (
     <div className="row bs">
       <div className="col-md-5">
-        <input type="text" className="form-control mb-3" placeholder="Room Name" 
+        {loading && <Loader />}
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="Room Name"
+          value={name}
+          onChange={(e) => {
+            setname(e.target.value);
+          }}
         />
-        <input type="text" className="form-control mb-3" placeholder="RentPerMonth" />
-        <input type="text" className="form-control mb-3" placeholder="Maximum People" />
-        <input type="text" className="form-control mb-3" placeholder="Description" />
-        <input type="text" className="form-control mb-3" placeholder="Phone Number" />
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="RentPerMonth"
+          value={rentpermonth}
+          onChange={(e) => {
+            setrentpermonth(e.target.value);
+          }}
+        />
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="Maximum People"
+          value={maxcount}
+          onChange={(e) => {
+            setmaxcount(e.target.value);
+          }}
+        />
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="Description"
+          value={description}
+          onChange={(e) => {
+            setdescription(e.target.value);
+          }}
+        />
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="Phone Number"
+          value={phonenumber}
+          onChange={(e) => {
+            setphonenumber(e.target.value);
+          }}
+        />
       </div>
       <div className="col-md-5">
-        <input type="text" className="form-control mb-3" placeholder="Floor" />
-        <input type="text" className="form-control mb-3" placeholder="Image URL 1" />
-        <input type="text" className="form-control mb-3" placeholder="Image URL 2" />
-        <input type="text" className="form-control mb-3" placeholder="Image URL 3" />
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="Floor (FirstFloor/SecondFloor)"
+          value={type}
+          onChange={(e) => {
+            settype(e.target.value);
+          }}
+        />
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="Image URL 1"
+          value={imageurl1}
+          onChange={(e) => {
+            setimageurl1(e.target.value);
+          }}
+        />
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="Image URL 2"
+          value={imageurl2}
+          onChange={(e) => {
+            setimageurl2(e.target.value);
+          }}
+        />
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="Image URL 3"
+          value={imageurl3}
+          onChange={(e) => {
+            setimageurl3(e.target.value);
+          }}
+        />
         <div className="text-right">
-          <button className="btn btn-primary mt-1">Post Room</button>
+          <button className="btn btn-primary mt-1" onClick={addRoom}>
+            Post Room
+          </button>
         </div>
       </div>
     </div>

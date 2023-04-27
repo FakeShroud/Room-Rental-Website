@@ -6,8 +6,8 @@ import Error from "../components/Error";
 const { TabPane } = Tabs;
 function Adminscreen() {
   useEffect(() => {
-    if(!JSON.parse(localStorage.getItem("currentUser")).isAdmin){
-      window.location.href = "/"
+    if (!JSON.parse(localStorage.getItem("currentUser")).isAdmin) {
+      window.location.href = "/";
     }
   });
   return (
@@ -183,22 +183,23 @@ export function Users() {
               <th>Name</th>
               <th>Email</th>
               <th>isAdmin</th>
-
             </tr>
           </thead>
           <tbody>
-            {users && (users.map((user) => {
-              return <tr>
-                <td>{user._id}</td>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.isAdmin ? 'YES' : 'NO'}</td>
-              </tr>
-            }))}
+            {users &&
+              users.map((user) => {
+                return (
+                  <tr>
+                    <td>{user._id}</td>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td>{user.isAdmin ? "YES" : "NO"}</td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
       </div>
     </div>
   );
-
 }
