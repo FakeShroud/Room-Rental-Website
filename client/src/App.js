@@ -9,7 +9,7 @@ import Aboutus from "./screens/Aboutus";
 import Profilescreen from "./screens/Profilescreen";
 import Adminscreen from "./screens/Adminscreen";
 import Landingscreen from "./screens/Landingscreen";
-import Postroomscreen from "./screens/Postroomscreen";
+
 
 function App() {
   return (
@@ -26,7 +26,6 @@ function App() {
           <Route path="/aboutus" exact element={<Aboutus />}></Route>
           <Route path="/profile" exact element={<Profilescreen />}></Route>
           <Route path="/admin" exact element={<Adminscreen />}></Route>
-          <Route path="/postroom" exact element={<Postroomscreen />}></Route>
           <Route path="/" exact element={<Landingscreen />}></Route>
           </Routes>
         

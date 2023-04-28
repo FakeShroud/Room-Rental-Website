@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Loader from "../components/Loader";
 import Swal from "sweetalert2";
+import { Upload } from "antd";
 import { Tag } from "antd";
 import { Tabs } from "antd";
 const { TabPane } = Tabs;
@@ -170,19 +171,50 @@ export function MyBookings() {
 }
 
 export function PostRoom() {
-  const [loading, setloading] = useState(false);
-  const [error, setError] = useState();
-  const [name, setname] = useState("");
-  const [rentpermonth, setrentpermonth] = useState("");
-  const [maxcount, setmaxcount] = useState("");
-  const [description, setdescription] = useState("");
-  const [phonenumber, setphonenumber] = useState("");
-  const [type, settype] = useState("");
-  const [imageurl1, setimageurl1] = useState("");
-  const [imageurl2, setimageurl2] = useState("");
-  const [imageurl3, setimageurl3] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [name, setName] = useState("");
+  const [rentpermonth, setRentpermonth] = useState("");
+  const [maxcount, setMaxcount] = useState("");
+  const [description, setDescription] = useState("");
+  const [phonenumber, setPhonenumber] = useState("");
+  const [type, setType] = useState("");
+  const [imageFiles, setImageFiles] = useState([]);
 
-  async function addRoom() {
+  const cloudinaryUploadURL = "https://api.cloudinary.com/v1_1/dihbwaox5/image/upload";
+  const cloudinaryUploadPreset = "room_rental";
+
+  const handleFileChange = (info) => {
+    let fileList = [...info.fileList];
+
+    
+      fileList = fileList.filter(file => {
+      const ext = file.name.split(".").pop().toLowerCase();
+      return ext === "jpg" || ext === "png";
+    });
+    if (fileList.length > 3) {
+      fileList = fileList.slice(-3);
+    }
+    setImageFiles(info.fileList);
+  };
+
+  const uploadImages = async () => {
+    const uploadedImageUrls = [];
+    for (const file of imageFiles) {
+      const formData = new FormData();
+      formData.append("file", file.originFileObj);
+      formData.append("upload_preset", cloudinaryUploadPreset);
+
+      const response = await axios.post(cloudinaryUploadURL, formData);
+      uploadedImageUrls.push(response.data.secure_url);
+    }
+    return uploadedImageUrls;
+  };
+
+  const addRoom = async () => {
+    setLoading(true);
+
+    const imageUrls = await uploadImages();
+
     const newroom = {
       name,
       rentpermonth,
@@ -190,117 +222,92 @@ export function PostRoom() {
       description,
       phonenumber,
       type,
-      imageurls: [imageurl1, imageurl2, imageurl3],
+      imageurls: imageUrls,
     };
+
     try {
-      setloading(true);
       const result = await axios.post("/api/rooms/addroom", newroom).data;
-      console.log(result);
-      setloading(false);
-      Swal.fire("Congrats!", "Room Added Successfully", "success").then(
-        (result) => {
-          window.location.href = "/home";
-        }
-      );
+      setLoading(false);
+      Swal.fire("Congrats!", "Room Added Successfully", "success").then((result) => {
+        window.location.href = "/home";
+      });
     } catch (error) {
       console.log(error);
-      setloading(false);
+      setLoading(false);
       Swal.fire("Oops!", "Something went wrong", "error");
     }
-  }
+  };
 
   return (
     <div className="row bs">
       <div className="col-md-5">
-        {loading && <Loader />}
         <input
           type="text"
           className="form-control mb-3"
           placeholder="Room Name"
           value={name}
-          onChange={(e) => {
-            setname(e.target.value);
-          }}
+          onChange={(e) => setName(e.target.value)}
         />
         <input
           type="text"
           className="form-control mb-3"
           placeholder="RentPerMonth"
           value={rentpermonth}
-          onChange={(e) => {
-            setrentpermonth(e.target.value);
-          }}
+          onChange={(e) => setRentpermonth(e.target.value)}
         />
         <input
           type="text"
           className="form-control mb-3"
           placeholder="Maximum People"
           value={maxcount}
-          onChange={(e) => {
-            setmaxcount(e.target.value);
-          }}
+          onChange={(e) => setMaxcount(e.target.value)}
         />
         <input
           type="text"
           className="form-control mb-3"
           placeholder="Description"
           value={description}
-          onChange={(e) => {
-            setdescription(e.target.value);
-          }}
+          onChange={(e) => setDescription(e.target.value)}
         />
         <input
           type="text"
           className="form-control mb-3"
           placeholder="Phone Number"
           value={phonenumber}
-          onChange={(e) => {
-            setphonenumber(e.target.value);
-          }}
+          onChange={(e) => setPhonenumber(e.target.value)}
         />
       </div>
       <div className="col-md-5">
         <input
           type="text"
           className="form-control mb-3"
-          placeholder="Floor (FirstFloor/SecondFloor)"
+          placeholder="Type"
           value={type}
-          onChange={(e) => {
-            settype(e.target.value);
-          }}
+          onChange={(e) => setType(e.target.value)}
         />
-        <input
-          type="text"
-          className="form-control mb-3"
-          placeholder="Image URL 1"
-          value={imageurl1}
-          onChange={(e) => {
-            setimageurl1(e.target.value);
-          }}
-        />
-        <input
-          type="text"
-          className="form-control mb-3"
-          placeholder="Image URL 2"
-          value={imageurl2}
-          onChange={(e) => {
-            setimageurl2(e.target.value);
-          }}
-        />
-        <input
-          type="text"
-          className="form-control mb-3"
-          placeholder="Image URL 3"
-          value={imageurl3}
-          onChange={(e) => {
-            setimageurl3(e.target.value);
-          }}
-        />
-        <div className="text-right">
-          <button className="btn btn-primary mt-1" onClick={addRoom}>
-            Post Room
-          </button>
-        </div>
+        <Upload
+          listType="picture-card"
+          fileList={imageFiles}
+          onChange={handleFileChange}
+          beforeUpload={() => false} // Prevent auto upload
+        >
+          {imageFiles.length >= 3 ? null : (
+            <div>
+              <i className="fas fa-plus" />
+              <div style={{ marginTop: 8 }}>Upload</div>
+            </div>
+          )}
+        </Upload>
+      </div>
+
+      <div className="col-md-2">
+        <button
+          className="btn btn-dark"
+          disabled={loading}
+          onClick={addRoom}
+        >
+          {loading ? "Loading..." : "Add Room"}
+        </button>
       </div>
     </div>
   );

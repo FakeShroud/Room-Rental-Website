@@ -47,17 +47,17 @@ const Homescreen = () => {
         for (const booking of room.currentbookings) {
           if (
             !
-              moment((dates[0]).format("DD-MM-YYYY")).isBetween(
+              moment(moment((dates[0]).format("DD-MM-YYYY")).isBetween(
                 booking.fromdate,
                 booking.todate
               
-            ) &&
+            )) &&
             !
-              moment((dates[1]).format("DD-MM-YYYY")).isBetween(
+              moment(moment((dates[1]).format("DD-MM-YYYY")).isBetween(
                 booking.fromdate,
                 booking.todate
               
-            )
+            ))
           ) {
             if (
               moment(dates[0]).format("DD-MM-YYYY") !== booking.fromdate &&
