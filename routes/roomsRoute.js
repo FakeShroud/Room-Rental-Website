@@ -33,6 +33,28 @@ router.post("/addroom", async (req, res) => {
     
   }
 });
-
+router.post("/getroomsbyuserid", async (req, res) => {
+  try {
+    const rooms = await Room.find({ owner: req.body.userid });
+    res.status(200).send(rooms);
+  } catch (error) {
+    return res.status(404).json({ message: error });
+  }
+    
+  });
+  router.delete("/:roomId", async (req, res) => {
+    try {
+      const room = await Room.findById(req.params.roomId);
+      if (!room) {
+        return res.status(404).json({ message: "Room not found" });
+      }
+  
+      await room.remove();
+      res.status(200).json({ message: "Room deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Server error", error });
+    }
+  });
+  
 
 module.exports = router;

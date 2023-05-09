@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Tabs } from "antd";
 import axios from "axios";
 import Loader from "../components/Loader";
@@ -25,7 +25,7 @@ function Adminscreen() {
         {/* <TabPane tab="Add Room" key="3">
           <h1>Add Romms</h1>
         </TabPane> */}
-        <TabPane tab="Users" key="4">
+        <TabPane tab="Users" key="3">
           <Users />
         </TabPane>
       </Tabs>
@@ -55,6 +55,15 @@ export function Bookings() {
 
     fetchBookings();
   });
+  const deleteBooking = async (id) => {
+    try {
+      const response = await axios.delete(`/api/bookings/${id}`);
+      console.log('Delete booking response:', response);
+      setbookings(bookings.filter((booking) => booking._id !== id));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="row">
@@ -83,6 +92,14 @@ export function Bookings() {
                     <td>{booking.fromdate}</td>
                     <td>{booking.todate}</td>
                     <td>{booking.status}</td>
+                    <td>
+                      <button
+                        onClick={() => deleteBooking(booking._id)}
+                        className="btn btn-danger"
+                      >
+                        Delete
+                      </button>
+                    </td>
                   </tr>
                 );
               })}
@@ -99,6 +116,7 @@ export function Rooms() {
   const [error, seterror] = useState();
 
   useEffect(() => {
+    console.log("useEffect called");
     const fetchBookings = async () => {
       try {
         const data = (await axios.get("/api/rooms/getallrooms")).data;
@@ -113,6 +131,26 @@ export function Rooms() {
 
     fetchBookings();
   }, []);
+
+  // const deleteRoom = async (id) => {
+  //   try {
+  //     await axios.delete(`/api/rooms/${id}`);
+  //     setrooms(rooms.filter((room) => room._id !== id));
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  const deleteRoom = async (id) => {
+    console.log("Attempting to delete room with id:", id);
+    try {
+      const response = await axios.delete(`/api/rooms/${id}`);
+      console.log("Delete room response:", response); // Add this line
+      setrooms(rooms.filter((room) => room._id !== id));
+    } catch (error) {
+      console.log("Delete room error:", error); // Update this line
+    }
+  };
+  
 
   return (
     <div className="row">
@@ -134,13 +172,21 @@ export function Rooms() {
             {rooms.length &&
               rooms.map((room) => {
                 return (
-                  <tr>
+                  <tr key={room._id}>
                     <td>{room._id}</td>
                     <td>{room.name}</td>
                     <td>{room.type}</td>
                     <td>{room.rentpermonth}</td>
                     <td>{room.maxcount}</td>
                     <td>{room.phonenumber}</td>
+                    <td>
+                      <button
+                        onClick={() => deleteRoom(room._id)}
+                        className="btn btn-danger"
+                      >
+                        Delete
+                      </button>
+                    </td>
                   </tr>
                 );
               })}
@@ -170,6 +216,15 @@ export function Users() {
 
     fetchBookings();
   }, []);
+  const deleteUser = async (id) => {
+    try {
+      const response = await axios.delete(`/api/users/${id}`);
+      console.log('Delete user response:', response);
+      setusers(users.filter((user) => user._id !== id));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="row">
@@ -194,6 +249,14 @@ export function Users() {
                     <td>{user.name}</td>
                     <td>{user.email}</td>
                     <td>{user.isAdmin ? "YES" : "NO"}</td>
+                    <td>
+                      <button
+                        onClick={() => deleteUser(user._id)}
+                        className="btn btn-danger"
+                      >
+                        Delete
+                      </button>
+                    </td>
                   </tr>
                 );
               })}

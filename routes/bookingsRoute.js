@@ -82,5 +82,4 @@ router.get("/getallbookings", async (req, res) => {
     res.status(400).json({ message: error });
   }
 })
-
 module.exports = router;

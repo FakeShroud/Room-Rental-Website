@@ -69,6 +69,9 @@ function Profilescreen() {
         <TabPane tab="Post Room" key="3">
           <PostRoom />
         </TabPane>
+        <TabPane tab="Posted Room" key="4">
+          {/* <PostedRoom /> */}
+        </TabPane>
       </Tabs>
     </div>
   );
@@ -289,7 +292,7 @@ export function PostRoom() {
           listType="picture-card"
           fileList={imageFiles}
           onChange={handleFileChange}
-          beforeUpload={() => false} // Prevent auto upload
+          beforeUpload={() => false}
         >
           {imageFiles.length >= 3 ? null : (
             <div>
@@ -312,3 +315,4 @@ export function PostRoom() {
     </div>
   );
 }
+

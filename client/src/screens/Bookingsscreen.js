@@ -1,6 +1,8 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 // import StripeCheckout from "react-stripe-checkout";
+import KhaltiCheckout from "khalti-checkout-web";
+
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Loader from "../components/Loader";
@@ -43,6 +45,7 @@ function Bookingscreen({ match }) {
   const fromDateObj = moment(fromdate, "DD-MM-YYYY");
   const toDateObj = moment(todate, "DD-MM-YYYY");
   const totaldays = moment.duration(toDateObj.diff(fromDateObj)).asDays();
+  const totalAmount = Math.round((data?.rentpermonth / 30) * totaldays);
 
   async function bookRoom() {
     const bookingDetails = {
@@ -61,9 +64,38 @@ function Bookingscreen({ match }) {
     try {
       const result = await axios.post("/api/bookings/bookroom", bookingDetails);
       console.log(result);
-      Swal.fire("Congrats!", "Room Rented Successfully", "success");
+      // Swal.fire("Congrats!", "Room Rented Successfully", "success");
+      initiateKhaltiPayment();
     } catch (error) {}
   }
+const [paymentResponse, setPaymentResponse] = useState(null);
+
+  const initiateKhaltiPayment = async () => {
+    const config = {
+      publicKey: "test_public_key_343fd63d79484e2b9ca8af019a6ac1fe",
+      amount: totalAmount * 100, // Amount in paisa
+      productIdentity: data.name,
+      productName: data.name,
+      productUrl: "http://localhost:3000",
+      eventHandler: {
+        onSuccess(payload) {
+          setPaymentResponse(payload);
+          bookRoom(); // Call your booking function after successful payment
+        },
+        onError(error) {
+          console.log(error);
+        },
+        onClose() {
+          console.log("Payment window closed.");
+        },
+      },
+      paymentPreference: ["KHALTI"],
+    };
+  
+    const checkout = new KhaltiCheckout(config);
+    checkout.show({ amount: config.amount });
+  };
+  
 
   return (
     <div className="m-5">
@@ -99,7 +131,8 @@ function Bookingscreen({ match }) {
                   <hr />
                   <p>Total Days: {totaldays} </p>
                   <p>Per Month: {data.rentpermonth} </p>
-                  <p>Total Amount: {Math.round((data.rentpermonth / 30) * totaldays)} </p>
+                  {/* <p>Total Amount: {Math.round((data.rentpermonth / 30) * totaldays)} </p> */}
+                  <p>Total Amount: {totalAmount}</p>
                 </b>
               </div>
               <div style={{ float: "right" }}>
