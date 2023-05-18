@@ -4,10 +4,7 @@ const Room = require("../models/room");
 const User = require("../models/user");
 const router = express.Router();
 
-router.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-  next();
-});
+
 
 // Delete Booking
 router.delete("/bookings/:id", async (req, res) => {
@@ -25,23 +22,22 @@ router.delete("/bookings/:id", async (req, res) => {
 });
 
 // Delete Room
+
 router.delete("/rooms/:id", async (req, res) => {
   try {
-    const roomId = req.params.id.trim();
-    console.log("Room ID to be deleted (trimmed):", roomId); // Add this line
-    const room = await Room.findById(roomId);
+    const room = await Room.findById(req.params.id);
     if (!room) {
       return res.status(404).json({ message: "Room not found" });
     }
-    console.log("Room to be deleted:", room);
-    const deleteResult = await Room.deleteOne({ _id: roomId }); // Update this line
-    console.log("Delete result:", deleteResult); // Add this line
+    await Room.deleteOne({ _id: req.params.id });
     res.json({ message: "Room deleted successfully" });
   } catch (error) {
-    console.log("Error in delete room route:", error.message);
-    res.status(500).json({ message: "Server error", error: error.message });
+    console.log("Error in delete room route:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
+
+
 
 
 

@@ -80,7 +80,9 @@ const [paymentResponse, setPaymentResponse] = useState(null);
       eventHandler: {
         onSuccess(payload) {
           setPaymentResponse(payload);
-          bookRoom(); // Call your booking function after successful payment
+          bookRoom(); 
+          Swal.fire("Success!", "Payment Successful.", "success");
+          window.location.href = "/profile";
         },
         onError(error) {
           console.log(error);
@@ -136,7 +138,7 @@ const [paymentResponse, setPaymentResponse] = useState(null);
                 </b>
               </div>
               <div style={{ float: "right" }}>
-                <button className="btn btn-primary" onClick={bookRoom}>
+                <button className="btn btn-primary" onClick={initiateKhaltiPayment}>
                   Rent Now
                 </button>
               </div>

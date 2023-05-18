@@ -3,6 +3,8 @@ import { Tabs } from "antd";
 import axios from "axios";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
+import Swal from "sweetalert2";
+import { Upload } from "antd";
 const { TabPane } = Tabs;
 function Adminscreen() {
   useEffect(() => {
@@ -22,11 +24,12 @@ function Adminscreen() {
         <TabPane tab="Rooms" key="2">
           <Rooms />
         </TabPane>
-        {/* <TabPane tab="Add Room" key="3">
-          <h1>Add Romms</h1>
-        </TabPane> */}
+       
         <TabPane tab="Users" key="3">
           <Users />
+        </TabPane>
+        <TabPane tab="Post room" key="4">
+          <PostRoom />
         </TabPane>
       </Tabs>
     </div>
@@ -132,24 +135,17 @@ export function Rooms() {
     fetchBookings();
   }, []);
 
-  // const deleteRoom = async (id) => {
-  //   try {
-  //     await axios.delete(`/api/rooms/${id}`);
-  //     setrooms(rooms.filter((room) => room._id !== id));
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+
   const deleteRoom = async (id) => {
-    console.log("Attempting to delete room with id:", id);
     try {
       const response = await axios.delete(`/api/rooms/${id}`);
-      console.log("Delete room response:", response); // Add this line
+      console.log('Delete room response:', response);
       setrooms(rooms.filter((room) => room._id !== id));
     } catch (error) {
-      console.log("Delete room error:", error); // Update this line
+      console.log(error);
     }
   };
+  
   
 
   return (
@@ -262,6 +258,146 @@ export function Users() {
               })}
           </tbody>
         </table>
+      </div>
+    </div>
+  );
+}
+export function PostRoom() {
+  const [loading, setLoading] = useState(false);
+  const [name, setName] = useState("");
+  const [rentpermonth, setRentpermonth] = useState("");
+  const [maxcount, setMaxcount] = useState("");
+  const [description, setDescription] = useState("");
+  const [phonenumber, setPhonenumber] = useState("");
+  const [type, setType] = useState("");
+  const [imageFiles, setImageFiles] = useState([]);
+
+  const cloudinaryUploadURL =
+    "https://api.cloudinary.com/v1_1/dihbwaox5/image/upload";
+  const cloudinaryUploadPreset = "room_rental";
+
+  const handleFileChange = (info) => {
+    let fileList = [...info.fileList];
+
+    fileList = fileList.filter((file) => {
+      const ext = file.name.split(".").pop().toLowerCase();
+      return ext === "jpg" || ext === "png";
+    });
+    if (fileList.length > 3) {
+      fileList = fileList.slice(-3);
+    }
+    setImageFiles(info.fileList);
+  };
+
+  const uploadImages = async () => {
+    const uploadedImageUrls = [];
+    for (const file of imageFiles) {
+      const formData = new FormData();
+      formData.append("file", file.originFileObj);
+      formData.append("upload_preset", cloudinaryUploadPreset);
+
+      const response = await axios.post(cloudinaryUploadURL, formData);
+      uploadedImageUrls.push(response.data.secure_url);
+    }
+    return uploadedImageUrls;
+  };
+
+  const addRoom = async () => {
+    setLoading(true);
+
+    const imageUrls = await uploadImages();
+
+    const newroom = {
+      name,
+      rentpermonth,
+      maxcount,
+      description,
+      phonenumber,
+      type,
+      imageurls: imageUrls,
+    };
+
+    try {
+      const result = await axios.post("/api/rooms/addroom", newroom).data;
+      setLoading(false);
+      Swal.fire("Congrats!", "Room Added Successfully", "success").then(
+        (result) => {
+          window.location.href = "/home";
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      Swal.fire("Oops!", "Something went wrong", "error");
+    }
+  };
+
+  return (
+    <div className="row bs">
+      <div className="col-md-5">
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="Room Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="RentPerMonth"
+          value={rentpermonth}
+          onChange={(e) => setRentpermonth(e.target.value)}
+        />
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="Maximum People"
+          value={maxcount}
+          onChange={(e) => setMaxcount(e.target.value)}
+        />
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="Phone Number"
+          value={phonenumber}
+          onChange={(e) => setPhonenumber(e.target.value)}
+        />
+      </div>
+      <div className="col-md-5">
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="Type"
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+        />
+        <Upload
+          listType="picture-card"
+          fileList={imageFiles}
+          onChange={handleFileChange}
+          beforeUpload={() => false}
+        >
+          {imageFiles.length >= 3 ? null : (
+            <div>
+              <i className="fas fa-plus" />
+              <div style={{ marginTop: 8 }}>Upload</div>
+            </div>
+          )}
+        </Upload>
+      </div>
+
+      <div className="col-md-2">
+        <button className="btn btn-dark" disabled={loading} onClick={addRoom}>
+          {loading ? "Loading..." : "Add Room"}
+        </button>
       </div>
     </div>
   );

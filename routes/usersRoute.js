@@ -57,4 +57,24 @@ router.get("/getallusers", async (req, res) => {
   }
 })
 
+router.put("/users/:id", async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const updatedUserData = req.body;
+
+    // Find user by id and update the user data
+    const user = await User.findByIdAndUpdate(userId, updatedUserData, { new: true });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Send the updated user data as a response
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 module.exports = router;

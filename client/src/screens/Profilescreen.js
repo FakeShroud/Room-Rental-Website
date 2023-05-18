@@ -10,12 +10,36 @@ const { TabPane } = Tabs;
 
 function Profilescreen() {
   const user = JSON.parse(localStorage.getItem("currentUser"));
-
+  const [editing, setEditing] = useState(false);
+  const [name, setName] = useState(user.name);
+  const [email, setEmail] = useState(user.email);
+  const [district, setDistrict] = useState(user.district);
+  const [number, setNumber] = useState(user.number);
   useEffect(() => {
     if (!user) {
       window.location.href = "/login";
     }
   }, [user]);
+
+  const handleEdit = async () => {
+    if (editing) {
+      // Submit the form
+      try {
+        const updatedUser = { ...user, name, email, district, number };
+        const response = await axios.put(`/api/users/${user.id}`, updatedUser);
+        localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+        Swal.fire("Congrats!", "Profile updated successfully", "success");
+      } catch (error) {
+        console.log(error);
+        Swal.fire(
+          "Oops!",
+          "An error occurred while updating the profile.",
+          "error"
+        );
+      }
+    }
+    setEditing(!editing);
+  };
 
   return (
     <div className="container mt-3">
@@ -29,7 +53,14 @@ function Profilescreen() {
                     <p className="mb-0">Name</p>
                   </div>
                   <div className="col-sm-9">
-                    <p className="text-muted mb-0">{user.name}</p>
+                    {editing ? (
+                      <input
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                    ) : (
+                      <p className="text-muted mb-0">{name}</p>
+                    )}
                   </div>
                 </div>
                 <hr />
@@ -38,7 +69,14 @@ function Profilescreen() {
                     <p className="mb-0">Email</p>
                   </div>
                   <div className="col-sm-9">
-                    <p className="text-muted mb-0">{user.email}</p>
+                    {editing ? (
+                      <input
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    ) : (
+                      <p className="text-muted mb-0">{email}</p>
+                    )}
                   </div>
                 </div>
                 <hr />
@@ -47,7 +85,14 @@ function Profilescreen() {
                     <p className="mb-0">District</p>
                   </div>
                   <div className="col-sm-9">
-                    <p className="text-muted mb-0">{user.district}</p>
+                    {editing ? (
+                      <input
+                        value={district}
+                        onChange={(e) => setDistrict(e.target.value)}
+                      />
+                    ) : (
+                      <p className="text-muted mb-0">{district}</p>
+                    )}
                   </div>
                 </div>
                 <hr />
@@ -56,7 +101,22 @@ function Profilescreen() {
                     <p className="mb-0">Phone</p>
                   </div>
                   <div className="col-sm-9">
-                    <p className="text-muted mb-0">{user.number}</p>
+                    {editing ? (
+                      <input
+                        value={number}
+                        onChange={(e) => setNumber(e.target.value)}
+                      />
+                    ) : (
+                      <p className="text-muted mb-0">{number}</p>
+                    )}
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-sm-3"></div>
+                  <div className="col-sm-9 text-right">
+                    <button onClick={handleEdit} className="btn btn-primary">
+                      {editing ? "Save" : "Edit"}
+                    </button>
                   </div>
                 </div>
               </div>
@@ -76,6 +136,8 @@ function Profilescreen() {
     </div>
   );
 }
+
+
 
 export default Profilescreen;
 
@@ -183,14 +245,14 @@ export function PostRoom() {
   const [type, setType] = useState("");
   const [imageFiles, setImageFiles] = useState([]);
 
-  const cloudinaryUploadURL = "https://api.cloudinary.com/v1_1/dihbwaox5/image/upload";
+  const cloudinaryUploadURL =
+    "https://api.cloudinary.com/v1_1/dihbwaox5/image/upload";
   const cloudinaryUploadPreset = "room_rental";
 
   const handleFileChange = (info) => {
     let fileList = [...info.fileList];
 
-    
-      fileList = fileList.filter(file => {
+    fileList = fileList.filter((file) => {
       const ext = file.name.split(".").pop().toLowerCase();
       return ext === "jpg" || ext === "png";
     });
@@ -231,9 +293,11 @@ export function PostRoom() {
     try {
       const result = await axios.post("/api/rooms/addroom", newroom).data;
       setLoading(false);
-      Swal.fire("Congrats!", "Room Added Successfully", "success").then((result) => {
-        window.location.href = "/home";
-      });
+      Swal.fire("Congrats!", "Room Added Successfully", "success").then(
+        (result) => {
+          window.location.href = "/home";
+        }
+      );
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -304,15 +368,10 @@ export function PostRoom() {
       </div>
 
       <div className="col-md-2">
-        <button
-          className="btn btn-dark"
-          disabled={loading}
-          onClick={addRoom}
-        >
+        <button className="btn btn-dark" disabled={loading} onClick={addRoom}>
           {loading ? "Loading..." : "Add Room"}
         </button>
       </div>
     </div>
   );
 }
-
