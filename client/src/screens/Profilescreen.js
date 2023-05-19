@@ -29,9 +29,12 @@ function Profilescreen() {
         const response = await axios.put(`/api/users/${user.id}`, updatedUser);
         localStorage.setItem("currentUser", JSON.stringify(updatedUser));
         Swal.fire("Congrats!", "Profile updated successfully", "success");
+        console.log("Message", response)
       } catch (error) {
+        console.log(user)
         console.log(error);
-        Swal.fire(
+        
+         await Swal.fire(
           "Oops!",
           "An error occurred while updating the profile.",
           "error"
