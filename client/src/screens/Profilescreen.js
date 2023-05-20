@@ -314,7 +314,7 @@ export function PostRoom() {
         <input
           type="text"
           className="form-control mb-3"
-          placeholder="Room Name"
+          placeholder="Room Name With Location"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -351,7 +351,7 @@ export function PostRoom() {
         <input
           type="text"
           className="form-control mb-3"
-          placeholder="Type"
+          placeholder="Type 'FirstFloor/SecondFloor'"
           value={type}
           onChange={(e) => setType(e.target.value)}
         />

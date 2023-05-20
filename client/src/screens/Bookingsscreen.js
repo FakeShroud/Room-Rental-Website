@@ -1,6 +1,5 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-// import StripeCheckout from "react-stripe-checkout";
 import KhaltiCheckout from "khalti-checkout-web";
 
 import axios from "axios";
