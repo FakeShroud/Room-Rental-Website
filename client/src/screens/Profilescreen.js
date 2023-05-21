@@ -15,11 +15,26 @@ function Profilescreen() {
   const [email, setEmail] = useState(user.email);
   const [district, setDistrict] = useState(user.district);
   const [number, setNumber] = useState(user.number);
+  const [postedRooms, setPostedRooms] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (!user) {
       window.location.href = "/login";
+    }else {
+      fetchPostedRooms();
     }
   }, [user]);
+  const fetchPostedRooms = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`/api/rooms/user/${user.id}`);
+      setPostedRooms(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
 
   const handleEdit = async () => {
     if (editing) {
@@ -34,11 +49,11 @@ function Profilescreen() {
         console.log(user)
         console.log(error);
         
-         await Swal.fire(
-          "Oops!",
-          "An error occurred while updating the profile.",
-          "error"
-        );
+        //  await Swal.fire(
+        //   "Oops!",
+        //   "An error occurred while updating the profile.",
+        //   "error"
+        // );
       }
     }
     setEditing(!editing);

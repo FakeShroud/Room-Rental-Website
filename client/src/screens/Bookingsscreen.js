@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import KhaltiCheckout from "khalti-checkout-web";
-
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Loader from "../components/Loader";
@@ -13,6 +13,8 @@ function Bookingscreen({ match }) {
   const [data, setData] = useState();
   const [loading, setloading] = useState(true);
   const [error, setError] = useState();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [placeCoordinates, setPlaceCoordinates] = useState(null);
 
   let { id } = useParams();
   let { fromdate } = useParams();
@@ -45,6 +47,24 @@ function Bookingscreen({ match }) {
   const toDateObj = moment(todate, "DD-MM-YYYY");
   const totaldays = moment.duration(toDateObj.diff(fromDateObj)).asDays();
   const totalAmount = Math.round((data?.rentpermonth / 30) * totaldays);
+
+  const handleSearch = async () => {
+    try {
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${searchQuery}&key=AIzaSyBrbqtQUu2DOy4W_HIR4bmCu43nAeiTfic`
+      );
+
+      if (response.data.status === "OK") {
+        const { lat, lng } = response.data.results[0].geometry.location;
+        setPlaceCoordinates({ lat, lng });
+      } else {
+        setPlaceCoordinates(null);
+      }
+    } catch (error) {
+      console.error("Error occurred during geocoding:", error);
+      setPlaceCoordinates(null);
+    }
+  };
 
   async function bookRoom() {
     const bookingDetails = {
@@ -95,8 +115,11 @@ const [paymentResponse, setPaymentResponse] = useState(null);
   
     const checkout = new KhaltiCheckout(config);
     checkout.show({ amount: config.amount });
+
+    
   };
   
+
 
   return (
     <div className="m-5">
@@ -141,6 +164,25 @@ const [paymentResponse, setPaymentResponse] = useState(null);
                   Rent Now
                 </button>
               </div>
+            </div>
+          </div>
+          <div className="m-5">
+            <LoadScript googleMapsApiKey="AIzaSyBrbqtQUu2DOy4W_HIR4bmCu43nAeiTfic">
+              <GoogleMap
+                mapContainerStyle={{ height: "400px", width: "100%" }}
+                center={placeCoordinates}
+                zoom={10}
+              >
+                {placeCoordinates && <Marker position={placeCoordinates} />}
+              </GoogleMap>
+            </LoadScript>
+            <div>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <button className="btn btn-primary" onClick={handleSearch}>Search</button>
             </div>
           </div>
         </div>

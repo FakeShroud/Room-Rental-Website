@@ -33,15 +33,7 @@ router.post("/addroom", async (req, res) => {
     
   }
 });
-// router.post("/getroomsbyuserid", async (req, res) => {
-//   try {
-//     const rooms = await Room.find({ owner: req.body.userid });
-//     res.status(200).send(rooms);
-//   } catch (error) {
-//     return res.status(404).json({ message: error });
-//   }
-    
-//   });
+
   router.delete("/:roomId", async (req, res) => {
     try {
       const room = await Room.findById(req.params.roomId);
